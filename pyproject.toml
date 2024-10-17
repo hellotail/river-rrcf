@@ -1,0 +1,77 @@
+[project]
+name = "river-rrcf"
+version = "0.1.0-dev.0"
+description = "Robust Random Cut Forest for the river"
+authors = [
+    { name = "Dowon", email = "ks2515@naver.com" },
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT" # PEP 639
+keywords = ["rrcf", "river", "anomaly detection"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = ["river>=0.21.2", "rrcf"]
+
+[project.optional-dependencies]
+dev = ["polars[plot]>=1.6.0", "vl-convert-python"]
+test = ["pytest", "pytest-cov", "hypothesis"]
+lint = ["ruff", "pre-commit>=4"]
+
+[project.urls]
+Repository = "https://github.com/hellotail/river-rrcf"
+
+[build-system]
+requires = ["pdm-backend>=2.4"]
+build-backend = "pdm.backend"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "scipy<1.14", # remove this when river update to >=0.21.3
+    "ipykernel",
+    "ipywidgets",
+]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "B",
+    "C4",
+    "C90",
+    "E",
+    "EM",
+    "F",
+    "FA",
+    "FBT",
+    "FURB",
+    "ISC",
+    "N",
+    "PD",
+    "PERF",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "RET",
+    "RUF",
+    "S",
+    "SIM",
+    "T20",
+    "TRY",
+    "UP",
+    "W",
+]
+ignore = [
+    "E501", # line-too-long
+]
+unfixable = [
+    "F401", # unused-import
+]
