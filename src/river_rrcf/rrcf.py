@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 from collections import deque
-from typing import TYPE_CHECKING, Any, SupportsFloat
 
 import numpy as np
 from river.anomaly.base import AnomalyDetector
 
 from river_rrcf._vendor import rrcf
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+    from typing import Any, SupportsFloat
+
     from numpy.typing import NDArray
 
 
