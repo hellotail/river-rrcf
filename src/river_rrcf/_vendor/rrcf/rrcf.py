@@ -68,11 +68,11 @@ class RCTree:
     def __init__(self, X=None, index_labels=None, precision=9, random_state=None):
         # Random number generation with provided seed
         if isinstance(random_state, int):
-            self.rng = np.random.RandomState(random_state)
-        elif isinstance(random_state, np.random.RandomState):
+            self.rng = np.random.default_rng(random_state)
+        elif isinstance(random_state, np.random.Generator):
             self.rng = random_state
         else:
-            self.rng = np.random
+            self.rng = np.random.default_rng()
         # Initialize dict for leaves
         self.leaves = {}
         # Initialize tree root
