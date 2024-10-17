@@ -4,8 +4,9 @@ from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, SupportsFloat
 
 import numpy as np
-import rrcf
 from river.anomaly.base import AnomalyDetector
+
+from river_rrcf._vendor import rrcf
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray

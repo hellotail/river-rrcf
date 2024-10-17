@@ -15,7 +15,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
-dependencies = ["river>=0.21.2", "rrcf"]
+dependencies = ["river>=0.21.2"]
 
 [project.optional-dependencies]
 dev = ["polars[plot]>=1.6.0", "vl-convert-python"]
@@ -39,6 +39,7 @@ dev-dependencies = [
 
 [tool.ruff]
 target-version = "py310"
+extend-exclude = ["src/river_rrcf/_vendor"]
 
 [tool.ruff.lint]
 select = [
