@@ -15,6 +15,10 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
+FLOAT32_MAX = 3.4028234663852886e38
+FLOAT32_MIN = -3.4028234663852886e38
+
+
 class RobustRandomCutForest(AnomalyDetector):
     """
     A Robust Random Cut Forest (RRCF) for anomaly detection.
@@ -105,7 +109,7 @@ class RobustRandomCutForest(AnomalyDetector):
             raise ValueError(msg)
 
         arr = np.array(items, dtype=np.float64)
-        return np.nan_to_num(arr, copy=False)
+        return np.nan_to_num(arr, copy=False).clip(FLOAT32_MIN, FLOAT32_MAX)
 
     def _init_shingle(self, arr: NDArray[np.float64]) -> deque[NDArray[np.float64]]:
         a = np.zeros_like(arr)
@@ -114,6 +118,8 @@ class RobustRandomCutForest(AnomalyDetector):
     def learn_one(self, x: Mapping[Any, SupportsFloat]) -> None:
         """
         Learn a single data point.
+
+        Note: The input values are restricted to the float32 range.
 
         Parameters
         ----------
@@ -132,7 +138,7 @@ class RobustRandomCutForest(AnomalyDetector):
         self._shingle.append(xx)
 
         for tree in self.forest:
-            if len(tree.leaves) > self.tree_size:
+            if len(tree.leaves) >= self.tree_size:
                 tree.forget_point(self._index - self.tree_size)
             arr = np.concatenate(self._shingle)
             tree.insert_point(arr, index=self._index)
