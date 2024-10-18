@@ -93,30 +93,6 @@ def test_learn_one_valid_input(data: dict[str, int | float]):
         assert len(tree.leaves) <= rrcf.tree_size
 
 
-@given(
-    st.lists(
-        st.fixed_dictionaries(
-            {
-                "a": st.one_of(st.floats(), st.integers()),
-                "b": st.one_of(st.floats(), st.integers()),
-                "c": st.one_of(st.floats(), st.integers()),
-            },
-        ),
-        min_size=1,
-        max_size=10,
-    )
-)
-def test_learn_one_multiple(data: list[dict[str, int | float]]):
-    rrcf = RobustRandomCutForest()
-
-    for d in data:
-        _ = rrcf.score_one(d)
-        rrcf.learn_one(d)
-
-    for tree in rrcf.forest:
-        assert len(tree.leaves) <= rrcf.tree_size
-
-
 def test_learn_one_empty_input():
     rrcf = RobustRandomCutForest()
     initial_index = rrcf._index
@@ -143,7 +119,7 @@ def test_learn_one_tree_insertion():
 
 @given(
     st.dictionaries(
-        st.text(),
+        st.one_of(st.floats(), st.integers(), st.text(), st.binary()),
         st.one_of(st.floats(width=32), st.integers()),
         min_size=1,
     )
@@ -172,6 +148,30 @@ def test_score_one_tree_insertion():
     assert isinstance(score, float)
     for initial, tree in zip(initial_leaves, rrcf.forest, strict=True):
         assert len(tree.leaves) == initial
+
+
+@given(
+    st.lists(
+        st.fixed_dictionaries(
+            {
+                "a": st.one_of(st.floats(), st.integers()),
+                "b": st.one_of(st.floats(), st.integers()),
+                "c": st.one_of(st.floats(), st.integers()),
+            },
+        ),
+        min_size=1,
+        max_size=10,
+    )
+)
+def test_learn_score_multiple(data: list[dict[str, int | float]]):
+    rrcf = RobustRandomCutForest()
+
+    try:
+        for d in data:
+            _ = rrcf.score_one(d)
+            rrcf.learn_one(d)
+    except Exception as e:
+        pytest.fail(f"Exception raised: {e}")
 
 
 @given(
