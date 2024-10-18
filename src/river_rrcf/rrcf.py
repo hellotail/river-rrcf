@@ -16,6 +16,47 @@ if TYPE_CHECKING:
 
 
 class RobustRandomCutForest(AnomalyDetector):
+    """
+    A Robust Random Cut Forest (RRCF) for anomaly detection.
+
+    Parameters
+    ----------
+    num_trees : int, default=40
+        The number of trees in the forest.
+    tree_size : int, default=256
+        The maximum size of each tree.
+    shingle_size : int, default=1
+        The size of the shingle (window) for time series data.
+
+    Attributes
+    ----------
+    num_trees : int
+        The number of trees in the forest.
+    tree_size : int
+        The maximum size of each tree.
+    shingle_size : int
+        The size of the shingle (window) for time series data.
+    forest : list
+        A list of RCTree instances representing the forest.
+    _index : int
+        The current index of the data point being processed.
+    _keys : list or None
+        The keys of the input data mapping.
+    _shingle : deque or None
+        A deque representing the shingle for time series data.
+
+    Methods
+    -------
+    _preprocess(x)
+        Preprocesses the input data mapping into a numpy array.
+    _init_shingle(arr)
+        Initializes the shingle with zeros.
+    learn_one(x)
+        Learns from a single data point.
+    score_one(x)
+        Scores a single data point for anomaly detection.
+    """
+
     def __init__(
         self,
         num_trees: int = 40,
@@ -33,6 +74,24 @@ class RobustRandomCutForest(AnomalyDetector):
         self._shingle: deque[NDArray[np.float64]] | None = None
 
     def _preprocess(self, x: Mapping[Any, SupportsFloat]) -> NDArray[np.float64]:
+        """
+        Preprocesses the input mapping by converting its values to a numpy array of floats.
+
+        Parameters
+        ----------
+        x : Mapping[Any, SupportsFloat]
+            The input mapping where keys are any hashable type and values are convertible to float.
+
+        Returns
+        -------
+        NDArray[np.float64]
+            An 1-d numpy array of floats corresponding to the values of the input mapping.
+
+        Raises
+        ------
+        ValueError
+            If there are keys in the input mapping that were not expected based on the initial keys.
+        """
         if self._keys is None:
             self._keys = list(x)
 
@@ -53,6 +112,15 @@ class RobustRandomCutForest(AnomalyDetector):
         return deque([a] * self.shingle_size, maxlen=self.shingle_size)
 
     def learn_one(self, x: Mapping[Any, SupportsFloat]) -> None:
+        """
+        Learn a single data point.
+
+        Parameters
+        ----------
+        x : Mapping[Any, SupportsFloat]
+            The data point to learn.
+
+        """
         if len(x) == 0 and not self._keys:
             return
 
@@ -72,6 +140,24 @@ class RobustRandomCutForest(AnomalyDetector):
         self._index += 1
 
     def score_one(self, x: Mapping[Any, SupportsFloat]) -> float:
+        """
+        Computes the anomaly score for a single data point.
+
+        Parameters
+        ----------
+        x : Mapping[Any, SupportsFloat]
+            The data point to be scored. It should be a mapping where keys are hashable and values are floats.
+
+        Returns
+        -------
+        float
+            The computed anomaly score for the given data point.
+
+        Notes
+        -----
+        - If the input data point is empty and the forest is not initialized, this method returns 0.0.
+        - The anomaly score is calculated as the average co-displacement (codisp) across all trees in the forest.
+        """
         if len(x) == 0 and not self._keys:
             return 0.0
 
