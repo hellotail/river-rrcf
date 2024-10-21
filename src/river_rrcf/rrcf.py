@@ -31,6 +31,8 @@ class RobustRandomCutForest(AnomalyDetector):
         The maximum size of each tree.
     shingle_size : int, default=1
         The size of the shingle (window) for time series data.
+    random_state : int | None, default=None
+        Random seed for each tree in the forest. (>= 0 if int)
 
     Attributes
     ----------
@@ -65,12 +67,21 @@ class RobustRandomCutForest(AnomalyDetector):
         self,
         num_trees: int = 40,
         tree_size: int = 256,
+        *,
         shingle_size: int = 1,
+        random_state: int | None = None,
     ):
         self.num_trees = num_trees
         self.tree_size = tree_size
         self.shingle_size = shingle_size
-        self.forest = [rrcf.RCTree() for _ in range(num_trees)]
+        self.random_state = random_state
+
+        if random_state is not None:
+            self.forest = [
+                rrcf.RCTree(random_state=random_state + i) for i in range(num_trees)
+            ]
+        else:
+            self.forest = [rrcf.RCTree(random_state=None) for _ in range(num_trees)]
 
         self._index = 0
         self._keys: list[Any] | None = None
