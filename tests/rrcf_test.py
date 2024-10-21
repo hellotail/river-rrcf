@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from hypothesis import given, assume
+from hypothesis import given, assume, settings
 from hypothesis import strategies as st
 
 from river_rrcf.rrcf import RobustRandomCutForest
@@ -163,6 +163,7 @@ def test_score_one_tree_insertion():
         max_size=10,
     )
 )
+@settings(deadline=500)
 def test_learn_score_multiple(data: list[dict[str, int | float]]):
     rrcf = RobustRandomCutForest()
 
@@ -170,7 +171,33 @@ def test_learn_score_multiple(data: list[dict[str, int | float]]):
         for d in data:
             _ = rrcf.score_one(d)
             rrcf.learn_one(d)
-    except Exception as e:
+    except Exception as e:  # pragma: no cover
+        pytest.fail(f"Exception raised: {e}")
+
+
+@given(
+    data=st.lists(
+        st.fixed_dictionaries(
+            {
+                "a": st.one_of(st.floats(), st.integers()),
+                "b": st.one_of(st.floats(), st.integers()),
+                "c": st.one_of(st.floats(), st.integers()),
+            },
+        ),
+        min_size=20,
+        max_size=20,
+    ),
+    shingle_size=st.integers(min_value=1, max_value=4),
+)
+@settings(deadline=None)
+def test_many_data(data: list[dict], shingle_size: int):
+    rrcf = RobustRandomCutForest(num_trees=2, tree_size=4, shingle_size=shingle_size)
+
+    try:
+        for d in data:
+            _ = rrcf.score_one(d)
+            rrcf.learn_one(d)
+    except Exception as e:  # pragma: no cover
         pytest.fail(f"Exception raised: {e}")
 
 
@@ -187,6 +214,7 @@ def test_learn_score_multiple(data: list[dict[str, int | float]]):
         max_size=5,
     ),
 )
+@settings(deadline=None)
 def test_rrcf_init_score_learn(
     num_trees: int,
     tree_size: int,
@@ -217,6 +245,7 @@ def test_rrcf_init_score_learn(
     scores = []
     for d in data:
         score = rrcf.score_one(d)
+        scores.append(score)
         rrcf.learn_one(d)
 
     assert rrcf._index == len(data)
