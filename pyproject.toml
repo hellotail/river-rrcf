@@ -20,7 +20,7 @@ dependencies = ["river>=0.21.2"]
 [project.optional-dependencies]
 dev = ["polars[plot]>=1.6.0", "vl-convert-python"]
 test = ["pytest", "pytest-cov", "hypothesis"]
-lint = ["ruff", "pre-commit>=4"]
+lint = ["ruff", "pre-commit>=4", "pre-commit-uv"]
 
 [project.urls]
 Repository = "https://github.com/hellotail/river-rrcf"
