@@ -19,7 +19,14 @@ dependencies = ["river>=0.21.2"]
 
 [project.optional-dependencies]
 dev = ["polars[plot]>=1.6.0", "vl-convert-python"]
-test = ["pytest", "pytest-cov", "hypothesis", "polars"]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+    "tox-uv",
+    "hypothesis",
+    "polars",
+]
 lint = ["ruff", "pre-commit>=4", "pre-commit-uv"]
 
 [project.urls]
@@ -81,6 +88,17 @@ unfixable = [
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
     "S101", # Use of `assert` detected
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--no-cov-on-fail",
+    "--cov=src",
+    "--cov=tests",
+    "--cov-config=pyproject.toml",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
 ]
 
 [tool.coverage.run]

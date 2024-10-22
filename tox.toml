@@ -1,0 +1,29 @@
+requires = ["tox>=4.23"]
+env_list = ["3.10", "3.11", "3.12"]
+
+[env_run_base]
+description = "run the tests with pytest"
+package = "wheel"
+wheel_build_env = ".pkg"
+deps = [
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+    "hypothesis",
+    "polars",
+]
+commands = [
+    [
+        "pytest",
+        "tests",
+        "--color=yes",
+        "--no-cov-on-fail",
+        "--junitxml={work_dir}{/}junit.{env_name}.xml",
+        "--cov={env_site_packages_dir}{/}river_rrcf",
+        "--cov={tox_root}{/}tests",
+        "--cov-config={tox_root}{/}pyproject.toml",
+        "--cov-report=term-missing",
+        "--cov-report=html:{env_tmp_dir}{/}htmlcov",
+        "--cov-report=xml:{work_dir}{/}coverage.{env_name}.xml",
+    ],
+]
