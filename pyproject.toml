@@ -93,8 +93,6 @@ unfixable = [
 [tool.pytest.ini_options]
 addopts = [
     "--no-cov-on-fail",
-    "--cov=src",
-    "--cov=tests",
     "--cov-config=pyproject.toml",
     "--cov-report=term-missing",
     "--cov-report=html",
@@ -103,7 +101,7 @@ addopts = [
 
 [tool.coverage.run]
 omit = [
-    "src/river_rrcf/_vendor/*",
+    "*/_vendor/*",
 ]
 
 [tool.coverage.report]
