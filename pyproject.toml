@@ -7,7 +7,7 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT" # PEP 639
+license.text = "MIT"
 keywords = ["rrcf", "river", "anomaly detection"]
 classifiers = [
     "Programming Language :: Python :: 3",
