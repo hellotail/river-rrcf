@@ -40,3 +40,12 @@ jobs:
 
       - name: Run Tox
         run: tox run -e ${{ matrix.python-version }}
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: .tox/coverage.${{ matrix.python-version }}.xml
+          flags: ${{ matrix.python-version }}
+          name: ${{ matrix.os }}-${{ matrix.python-version }}
+          fail_ci_if_error: true
