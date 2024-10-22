@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pickle
+from uuid import uuid4
 from tempfile import TemporaryDirectory
 from pathlib import Path
 
@@ -52,7 +53,7 @@ def test_pickle(  # noqa: PLR0913 too-many-arguments
         rrcf.learn_one(d)
 
     with TemporaryDirectory() as tmp_dir:
-        tmp_file = Path(tmp_dir, "rrcf.pkl")
+        tmp_file = Path(tmp_dir, f"{uuid4()}.pkl")
 
         with tmp_file.open("wb") as f:
             pickle.dump(rrcf, f, protocol=protocol)
