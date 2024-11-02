@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from hypothesis import given, assume, settings
+from hypothesis import assume, given, settings
 from hypothesis import strategies as st
 
 from river_rrcf.rrcf import RobustRandomCutForest
@@ -58,6 +58,15 @@ def test_preprocess_unexpected_keys(data: dict[str, int | float]):
 
     with pytest.raises(ValueError, match="Unseen features:"):
         rrcf._preprocess(data)
+
+
+def test_initial_keys():
+    rrcf = RobustRandomCutForest(_keys=["a", "b", "c"])
+    _ = rrcf._preprocess({})
+    _ = rrcf._preprocess({"a": 1.0, "b": 2.0})
+    _ = rrcf._preprocess({"a": 1.0, "b": 2.0, "c": 3.0})
+    with pytest.raises(ValueError, match="Unseen features:"):
+        rrcf._preprocess({"a": 1.0, "b": 2.0, "c": 3.0, "d": 4.0})
 
 
 def test_preprocess_initial_keys():

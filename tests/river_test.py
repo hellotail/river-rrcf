@@ -3,9 +3,9 @@ from __future__ import annotations
 import numbers
 
 import polars as pl
-from hypothesis import given, settings
-from polars.testing.parametric import dataframes, column
 import pytest
+from hypothesis import given, settings
+from polars.testing.parametric import column, dataframes
 from river import compose, datasets, preprocessing, stream
 from river.datasets.synth import AnomalySine
 
