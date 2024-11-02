@@ -2,9 +2,7 @@
 name = "river-rrcf"
 version = "0.1.0"
 description = "Robust Random Cut Forest for the river"
-authors = [
-    { name = "Dowon", email = "ks2515@naver.com" },
-]
+authors = [{ name = "Dowon", email = "ks2515@naver.com" }]
 readme = "README.md"
 requires-python = ">=3.10"
 license.text = "MIT"
@@ -33,7 +31,7 @@ lint = ["ruff", "pre-commit>=4", "pre-commit-uv"]
 Repository = "https://github.com/hellotail/river-rrcf"
 
 [build-system]
-requires = ["pdm-backend>=2.4"]
+requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [tool.rye]
@@ -100,9 +98,7 @@ addopts = [
 ]
 
 [tool.coverage.run]
-omit = [
-    "*/_vendor/*",
-]
+omit = ["*/_vendor/*"]
 
 [tool.coverage.report]
 exclude_also = [

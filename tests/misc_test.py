@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import pickle
-from uuid import uuid4
-from tempfile import TemporaryDirectory
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from uuid import uuid4
 
 import pytest
 from hypothesis import given, settings
