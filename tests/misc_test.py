@@ -9,7 +9,12 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
+from river_rrcf import __version__
 from river_rrcf.rrcf import RobustRandomCutForest
+
+
+def test_version():
+    assert __version__ != "unknown"
 
 
 @pytest.mark.parametrize(
