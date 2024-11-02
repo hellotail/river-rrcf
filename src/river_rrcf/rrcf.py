@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Sequence
 
 import numpy as np
 from river.anomaly.base import AnomalyDetector
@@ -33,6 +34,8 @@ class RobustRandomCutForest(AnomalyDetector):
         The size of the shingle (window) for time series data.
     random_state : int | None, default=None
         Random seed for each tree in the forest. (>= 0 if int)
+    _keys : Sequence[Any] | None, default=None
+        The keys to expect in the input data mapping. If None, the keys are inferred from the first data point.
 
     Attributes
     ----------
@@ -70,6 +73,7 @@ class RobustRandomCutForest(AnomalyDetector):
         *,
         shingle_size: int = 1,
         random_state: int | None = None,
+        _keys: Sequence[Any] | None = None,
     ):
         self.num_trees = num_trees
         self.tree_size = tree_size
@@ -84,7 +88,7 @@ class RobustRandomCutForest(AnomalyDetector):
             self.forest = [rrcf.RCTree(random_state=None) for _ in range(num_trees)]
 
         self._index = 0
-        self._keys: list[Any] | None = None
+        self._keys: list[Any] | None = list(_keys) if _keys is not None else None
 
         self._shingle: deque[NDArray[np.float64]] | None = None
 
@@ -107,7 +111,7 @@ class RobustRandomCutForest(AnomalyDetector):
         ValueError
             If there are keys in the input mapping that were not expected based on the initial keys.
         """
-        if self._keys is None:
+        if not self._keys:
             self._keys = list(x)
 
         xx = dict(x)
