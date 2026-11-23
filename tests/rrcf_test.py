@@ -246,7 +246,7 @@ def test_rrcf_init_score_learn(
     assert rrcf._shingle is None
 
     all_keys = {key for d in data for key in d}
-    sample = {k: 0.0 for k in all_keys}
+    sample = dict.fromkeys(all_keys, 0.0)
     rrcf._preprocess(sample)
 
     assert rrcf._keys is not None
